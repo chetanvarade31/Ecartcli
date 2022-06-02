@@ -1,0 +1,17 @@
+how to run ? 
+
+python Ecart.py  "command name"
+
+python Ecart.py --help
+
+* Commands :
+	1) newuser
+	2) adminlogin
+	3) userlogin
+
+* Admin Credentials :
+	Username = Admin
+	Password = admin@31
+
+* Newuser :
+	python Ecart.py newuser  'username' 'password' 'repassword'
