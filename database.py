@@ -32,19 +32,34 @@ class Database():
 class Action(Database):
     def insert_cart(self,cart: Cart):
         self.c.execute('select count(*) FROM Cart')
-        self.c.execute("INSERT INTO Cart (username, name,category_name, price, date) VALUES (?,?,?,?,?)",(cart.username, cart.name, cart.category_name, cart.price, cart.date))
-        self.conn.commit()
+        try:
+            self.c.execute("INSERT INTO Cart (username, name,category_name, price, date) VALUES (?,?,?,?,?)",(cart.username, cart.name, cart.category_name, cart.price, cart.date))
+            self.conn.commit()
+            return True
+        except Exception as e:
+            print(e)
+            return False
 
     def insert_category(self,cate : Category ):
         self.c.execute('select count(*) FROM Category')
-        with self.conn:
-            self.c.execute('INSERT INTO Category VALUES (:category)',
-            {'category':cate.category})
+        try:
+            with self.conn:
+                self.c.execute('INSERT INTO Category VALUES (:category)',
+                {'category':cate.category})
+            return True
+        except Exception as e:
+            print(e)
+            return False
         
     def insert_order(self,order: OrderBills):
         self.c.execute('select count(*) FROM OrderBills')
-        self.c.execute("INSERT INTO OrderBills (username, no_of_product, actual_amount, discounted_amount, final_amount) VALUES (?,?,?,?,?)",(order.username, order.no_of_product, order.actual_amount, order.discounted_amount, order.final_amount))
-        self.conn.commit()
+        try:
+            self.c.execute("INSERT INTO OrderBills (username, no_of_product, actual_amount, discounted_amount, final_amount) VALUES (?,?,?,?,?)",(order.username, order.no_of_product, order.actual_amount, order.discounted_amount, order.final_amount))
+            self.conn.commit()
+            return True
+        except Exception as e:
+            print(e)
+            return False
 
     def addproduct(self,pro: Product):
         self.c.execute('select count(*) FROM Product')
@@ -102,12 +117,12 @@ class Action(Database):
         else:
             print('Password did not Match')
 
-    def showusers(self) -> List[User]:
-        self.c.execute('select * from User')
-        results = self.cc.fetchall()
+    def show_admin(self,username = None, password = None) -> List[User]:
+        self.c.execute(f"SELECT * from User WHERE username='{username}' AND password = '{password}'")
+        results = self.c.fetchall()
         self.users: List = []
         for result in results:
-            self.users.append(User(*result))
+            self.users.append(result)
         return self.users
 
     def showcategory(self) -> List[Category]:
@@ -134,8 +149,5 @@ class Action(Database):
             for result in results:
                 self.pro.append(Product(*result))
             return self.pro
-
-
-
 
 
