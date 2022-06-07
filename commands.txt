@@ -10,8 +10,15 @@ python Ecart.py --help
 	3) userlogin
 
 * Admin Credentials :
-	Username = Admin
+	Username =  Admin
 	Password = admin@31
+
+* Demo user Credentials :
+	Username = Chetan
+	Password = chetan@31
 
 * Newuser :
 	python Ecart.py newuser  'username' 'password' 'repassword'
+
+* Testing :
+	pytest testing.py

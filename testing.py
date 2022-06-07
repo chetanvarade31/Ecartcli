@@ -1,52 +1,73 @@
-from Ecart import add_category, add_tocart, newuser, showorder
-from database import addproduct, get_all_order, insert_category
-from model import Category, Product
-
-def test_add_category():
-    category = 'Electronic'
-    expected_output = None
-    ouput = add_category(category=category)
-    assert ouput == expected_output
 
 
-def test_add_to_cart():
-    username, name, category_name, price, date = "chetan varade","Mobile", "electronic", "4560","23-5-2021"
-    expected_output = None
-    output = add_tocart(username= username, name= name, category_name= category_name, price= price, date= date)
-    assert output == expected_output
+from typing import List
 
+from rich import console
+from Ecart import Ecart
+from model import Category, Product, User
 
-def test_new_user():
-    username, password, repassword = "chetanvarade","Chetan@31","Chetan@31"
-    expected_output = None
-    output = newuser(username=username, password=password, repassword= repassword)
-    assert output == expected_output
+        
+from database import Action
 
-
-def test_show_order():
-    expected_output = None
-    output = showorder(username=None)
-    assert output == expected_output
-
-
-def test_product():
-    name, category, price, date = "Redmi 6A", "Electronic", "45620","23-02-2022"
-    product_obj = Product(id,name=name, category= category, price= price, date= date)
-    expected_output = None
-    output = addproduct(product_obj)
-    assert output == expected_output
-
-
-def test_get_all_order():
-    expected_output = type(list())
-    output = get_all_order(username= None)
-    assert type(output) == expected_output
-
-
-def test_insert_category():
-    category = 'cloth'
+# Ecart.py file
+class TestEcart():
+    ec = Ecart()
+    category = 'headphones'
     category_obj = Category(category=category)
-    expected_output = None
-    output = insert_category(category_obj)
-    assert output == expected_output
 
+    def test_add_category(self):
+        self.expected_output = True
+        self.ouput = self.ec.add_category(category=self.category)
+        assert self.ouput == self.expected_output
+
+    def test_add_product(self):
+        self.expected_output = True
+        self.ouput = self.ec.add_product("redmi 5A","mobile","3560","05-06-2022")
+        assert self.ouput == self.expected_output
+ 
+    def test_add_tocart(self):
+        self.expected_output = True
+        self.ouput = self.ec.add_tocart("Chetan","redmi 5A","mobile",3560,"05-06-2022")
+        assert self.ouput == self.expected_output
+
+    def test_showcart(self):
+        self.expected_output = (3,"Chetan","tv","electronic",5621,"04-05-2022")
+        self.lst: List = []
+        for item in self.ec.showcart():
+            self.lst.extend([(item.id,item.username,item.name,item.category_name,item.price,item.date)]) 
+        assert self.expected_output in self.lst
+    
+    def test_show_category(self):
+        self.expected_output = 'electronic'
+        self.ouput = self.ec.show_category()
+        self.lst: List  = []
+        for item in self.ec.show_category():
+            self.lst.append(item.category)
+        assert self.expected_output in self.lst
+
+    def test_products(self):
+        self.expected_output = (1, 'tv', 'electronic', 5621, '04-05-2022')
+        self.ouput = self.ec.products() 
+        self.lst: List  = []
+        for item in self.ec.products():
+            self.lst.extend([(item.id, item.name, item.category, item.price, item.date)])
+        print(self.lst)
+        assert self.expected_output in self.lst
+
+
+# database.py file 
+class TestDatabaseAction():
+    ac = Action()
+    def test_get_all_cart(self):
+        self.expected_output = (3, 'tv', 'electronic', 5621, '04-05-2022')
+        self.lst: List  = []
+        for item in self.ac.get_all_cart():
+            self.lst.extend([(item.id, item.name, item.category_name, item.price, item.date)])
+        print(self.lst)
+        assert self.expected_output in self.lst
+
+    def test_new_user(self):
+        self.expected_output = True
+        user = User(username="Test",password="test@31",repassword="test@31")
+        self.output = self.ac.new_user(user)
+        assert self.expected_output == self.output

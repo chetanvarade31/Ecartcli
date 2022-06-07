@@ -10,7 +10,6 @@ class Cart():
     def __repr__(self) -> str:
         return f"({self.id},{self.username},{self.name}, {self.category_name}, {self.price}, {self.date})"
 
-
 class User():
     def __init__(self,username, password,repassword = None):
         self.username = username
@@ -24,11 +23,8 @@ class Category():
     def __init__(self,category):
         self.category = category
        
-
     def __repr__(self) -> str:
         return f"({self.category})"
-
-
 
 class Product():
     def __init__(self,id,name, category, price, date):
