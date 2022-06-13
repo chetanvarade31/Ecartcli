@@ -20,7 +20,8 @@ class User():
         return f"({self.username},{self.password},{self.repassword})"
 
 class Category():
-    def __init__(self,category):
+    def __init__(self,id,category):
+        self.id = id
         self.category = category
        
     def __repr__(self) -> str:
@@ -37,7 +38,7 @@ class Product():
     def __repr__(self) -> str:
         return f"({self.id},{self.name},{self.category},{self.price},{self.date})"
 
-class OrderBills():
+class OrderBills(Category):
     def __init__(self,id,username, no_of_product, actual_amount, discounted_amount, final_amount):
         self.id = id
         self.username = username
@@ -48,3 +49,5 @@ class OrderBills():
 
     def __repr__(self) -> str:
         return f"({self.id},{self.username},{self.no_of_product},{self.actual_amount},{self.discounted_amount},{self.final_amount})"
+
+obj = OrderBills(1,"gbg",4,456,45,545)

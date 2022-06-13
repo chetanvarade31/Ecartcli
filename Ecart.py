@@ -16,7 +16,7 @@ class Ecart():
 class CategoryClass(Ecart):
 
     def add_category(self,category: str):
-        self.cate = Category(category)
+        self.cate = Category(id=id, category= category)
         try:
             self.ac.insert_category(self.cate)
             self.show_category()
@@ -113,8 +113,6 @@ class UserClass(ProductClass):
 
     
 
-    
-
     @staticmethod
     @apps.command()
     def adminlogin():
@@ -126,7 +124,7 @@ class UserClass(ProductClass):
             cred.append(result)
         if cred:
             while True:
-                print('1 Add Category\n2 Add Product\n3 Check Cart\n4 Check Order\n5 Exist')
+                print('1 Add Category\n2 Add Product\n3 Check Cart\n4 Check Order\n5 Check Category\n6 Check Product \n7 Exist')
                 choice = input("Enter the option name : ")
 
                 if choice == 'Add Category':
@@ -134,13 +132,25 @@ class UserClass(ProductClass):
                     obj.add_category(cate)
                     
                 elif choice == 'Add Product':
-                    name, category, price, date = input(" Enter 'name' 'category' 'price' 'date' : ").split()
-                    obj.add_product(name,category,price,date)
+                    obj.show_category()
+                    cat_id = int(input('Enter the id of the category : '))
+                    record = obj.c.execute(f"SELECT category from Category WHERE id = '{cat_id}' ")
+                    category_name = record.fetchone()
+                    category_name = category_name[0]
+                    
+                    name, price, date = input(" Enter 'name' 'price' 'date' : ").split()
+                    obj.add_product(name,category_name,price,date)
                     
                 elif choice == "Check Cart":
                     obj.showcart()
                 elif choice == "Check Order":
                     obj.showorder()
+
+                elif choice == "Check Category":
+                    obj.show_category()
+
+                elif choice == "Check Product":
+                    obj.products()
                 elif choice == "Exist":
                     break
         else:
@@ -158,8 +168,12 @@ class UserClass(ProductClass):
 
         if cred:
             obj.show_category()
-            categ  = input('Enter the Category name : ')
-            obj.products(categ)
+            cat_id = int(input('Enter the id of the category : '))
+            record = obj.c.execute(f"SELECT category from Category WHERE id = '{cat_id}' ")
+            category_name = record.fetchone()
+            category_name = category_name[0]
+
+            obj.products(category_name)
             choice = str(input("1 : Enter the Product ID to add in the Cart :\n2 : Type 'cart' to Show Cart :  "))
         
             if choice == "cart":

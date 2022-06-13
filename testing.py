@@ -13,7 +13,7 @@ class TestCategoryClass():
     
     ct = CategoryClass()
     category = 'headphones'
-    category_obj = Category(category=category)
+    category_obj = Category(id,category=category)
 
     def test_add_category(self):
         self.expected_output = True
@@ -36,7 +36,7 @@ class TestProductClass():
         assert self.ouput == self.expected_output
 
     def test_products(self):
-        self.expected_output = (1, 'tv', 'electronic', 5621, '04-05-2022')
+        self.expected_output = (1, 'vivo', 'electronic', 5669, '2-10-2021')
         self.ouput = self.p.products() 
         self.lst: List  = []
         for item in self.p.products():

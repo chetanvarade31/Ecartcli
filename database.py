@@ -1,9 +1,10 @@
 import sqlite3
 from typing import List
-from rich import console
+from rich.console import Console
 from model import Cart, Category, Product, User, OrderBills
-
+console = Console()
 class Database():
+    
     conn = sqlite3.connect('Ecart.db')
     c = conn.cursor()
 
@@ -14,12 +15,11 @@ class Database():
             )""")
 
         # category table for products
-        self.c.execute("""CREATE TABLE IF NOT EXISTS Category (
-                category text
-                )""")
+        
+        self.c.execute("CREATE TABLE IF NOT EXISTS Category (id integer primary key autoincrement, category text unique)")
 
         # creating product table for adding products
-        self.c.execute("CREATE TABLE IF NOT EXISTS Product (id integer primary key autoincrement, name text, category text, price integer, date text )")
+        self.c.execute("CREATE TABLE IF NOT EXISTS Product (id integer primary key autoincrement, name text, category text, price integer, date text, FOREIGN KEY(category) REFERENCES Category (category) )")
 
         # creating cart 
         self.c.execute("CREATE TABLE IF NOT EXISTS Cart (id integer primary key autoincrement, username text, name text, category_name text, price integer, date text )")
@@ -37,15 +37,14 @@ class Action(Database):
             self.conn.commit()
             return True
         except Exception as e:
-            print(e)
-            return False
+            console.log(e)
+            return False    
 
     def insert_category(self,cate : Category ):
         self.c.execute('select count(*) FROM Category')
         try:
-            with self.conn:
-                self.c.execute('INSERT INTO Category VALUES (:category)',
-                {'category':cate.category})
+            self.c.execute("INSERT INTO Category (category) VALUES (?)",(cate.category,))
+            self.conn.commit()
             return True
         except Exception as e:
             print(e)
@@ -136,7 +135,7 @@ class Action(Database):
     def showproduct(self,categ = None) -> List[Product]:
         self.categ = categ
         if self.categ is not None:
-            self.c.execute(f" select * from Product WHERE category='{self.categ}'")
+            self.c.execute(f"select * from Product WHERE category='{self.categ}'")
             results = self.c.fetchall()
             self.pro: List = []
             for result in results:
@@ -150,4 +149,11 @@ class Action(Database):
                 self.pro.append(Product(*result))
             return self.pro
 
+    def delete_category(self):
+        self.c.execute("DROP TABLE Product")
+        self.conn.commit()
+
+
+# obj = Action()
+# obj.delete_category()
 
