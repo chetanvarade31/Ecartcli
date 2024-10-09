@@ -39,6 +39,7 @@ class TestEcart(unittest.TestCase):
         expected_output = None
         output = addproduct(product_obj)
         self.assertEqual(output, expected_output)
+        self.assertEqual(output, expected_output)
 
 if __name__ == '__main__':
     unittest.main()
