@@ -5,6 +5,7 @@ from model import Product
 
 class TestEcart(unittest.TestCase):
 
+    
     def test_add_category(self):
         category = 'Electronic'
         expected_output = None
